@@ -3498,6 +3498,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5302657bcaaa03c448f21659d9b2c627, type: 3}
   - {fileID: 8300000, guid: fbb4b237f2eb1bb4ea2045195115889e, type: 3}
   - {fileID: 8300000, guid: 6e24049aadfd0b1469deef5dcbcea36f, type: 3}
+  - {fileID: 8300000, guid: 22c3b6fd24048c74aa3278fca047aa32, type: 3}
   musicFadeDuration: 1
 --- !u!4 &2045517738
 Transform:

@@ -369,6 +369,7 @@ MonoBehaviour:
   rotationSpeed: 180
   paymentUI: {fileID: 4448437885878194812}
   splineAnimate: {fileID: -8297121269670992557}
+  kaching: {fileID: 8300000, guid: 22c3b6fd24048c74aa3278fca047aa32, type: 3}
 --- !u!114 &-8297121269670992557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,9 +932,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Royalty
-
-    <color=#ff0000>10%</color>'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c6bdbdc4c39b0994da5cff21ed5745ee, type: 2}
   m_sharedMaterial: {fileID: 7251888327460278382, guid: c6bdbdc4c39b0994da5cff21ed5745ee, type: 2}
@@ -1070,9 +1069,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Revenue
-
-    <color=#ff0000>$4,000</color>'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c6bdbdc4c39b0994da5cff21ed5745ee, type: 2}
   m_sharedMaterial: {fileID: 7251888327460278382, guid: c6bdbdc4c39b0994da5cff21ed5745ee, type: 2}
@@ -1209,7 +1206,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sound Guy Steve
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c6bdbdc4c39b0994da5cff21ed5745ee, type: 2}
   m_sharedMaterial: {fileID: 7251888327460278382, guid: c6bdbdc4c39b0994da5cff21ed5745ee, type: 2}

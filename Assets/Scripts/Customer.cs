@@ -68,6 +68,8 @@ public class Customer : MonoBehaviour
         spawnedBook = bookObject.GetComponent<Book>();
         spawnedBook.SetCustomer(this);
 
+        CustomerManager.Instance.PlayImpact();
+
         AudioManager.Instance.PlaySFX(slamSound);
         StartCoroutine(Patience());
         StartCoroutine(CameraController.Instance.Shake(duration: 0.5f, magnitude: 0.04f));

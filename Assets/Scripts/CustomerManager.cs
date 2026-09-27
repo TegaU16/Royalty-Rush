@@ -1,3 +1,4 @@
+using Game.UI;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -11,6 +12,8 @@ public class CustomerManager : MonoBehaviour
     public SplineContainer customerLeavePath;
     public SplineContainer bookDiscardPath;
     public Transform bookSpawnPoint;
+
+    public GameObject bookImpact;
 
     private Customer activeCustomer;
 
@@ -60,4 +63,12 @@ public class CustomerManager : MonoBehaviour
     }
 
     private void RemoveCustomer() => activeCustomer = null;
+
+    public void PlayImpact()
+    {
+        bookImpact.SetActive(true);
+        UIImageAnimator uIImageAnimator = bookImpact.GetComponent<UIImageAnimator>();
+
+        uIImageAnimator.Play();
+    }
 }

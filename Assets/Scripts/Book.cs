@@ -1,4 +1,5 @@
 using System.Collections;
+using Game.Audio;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -13,9 +14,11 @@ public class Book : MonoBehaviour
     [SerializeField] private PaymentUI paymentUI;
     [SerializeField] private SplineAnimate splineAnimate;
 
+    public AudioClip kaching;
+
     private Customer customer;
 
-    private float targetRot = 180f;
+    private readonly float targetRot = 180f;
 
     private bool isOpen;
 
@@ -33,16 +36,14 @@ public class Book : MonoBehaviour
 
         float currentRot = 0f;
 
+        Payment payment = PaymentGenerator.Instance.GeneratePayment(CustomerManager.Instance.CurrentDifficulty);
+        paymentUI.SetPayment(payment);
+
         while (!isOpen)
         {
             if (currentRot >= targetRot)
             {
                 isOpen = true;
-
-                Payment payment = PaymentGenerator.Instance.GeneratePayment(CustomerManager.Instance.CurrentDifficulty);
-
-                paymentUI.SetPayment(payment);
-
                 yield break;
             }
 
@@ -82,6 +83,7 @@ public class Book : MonoBehaviour
 
     public void FinishPayment(bool paymentCorrect, Payment payment)
     {
+        AudioManager.Instance.PlaySFX(kaching);
         CameraController.Instance.ToggleBookCamera(on: false);
         StartCoroutine(CloseRoutine());
 
