@@ -77,7 +77,7 @@ public class Customer : MonoBehaviour
     {
         UITween.PopIn(patienceRect, patienceBarCG);
 
-        while (currentPatience > 0f && !isLeaving)
+        while (GameManager.Instance.IsReady && currentPatience > 0f && !isLeaving)
         {
             currentPatience -= Time.deltaTime;
 
@@ -92,7 +92,7 @@ public class Customer : MonoBehaviour
 
             patienceBar.SetPatience(currentPatience, patience);
             if (spawnedBook != null)
-                spawnedBook.Close();
+                spawnedBook.Discard();
             Leave(angry: true, null);
         }
     }
@@ -142,8 +142,10 @@ public class Customer : MonoBehaviour
     {
         StopAllCoroutines();
 
+        UITween.FadeOut(patienceBarCG);
+
         if (spawnedBook != null)
-            spawnedBook.Close();
+            spawnedBook.Discard();
 
         deathPS.transform.SetParent(null);
         deathPS.Play();

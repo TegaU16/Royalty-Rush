@@ -95,5 +95,16 @@ public class Book : MonoBehaviour
 
     public void SetCustomer(Customer customer) => this.customer = customer;
 
-    public void Close() => StartCoroutine(CloseRoutine());
+    public void Discard()
+    {
+        if (isOpen)
+        {
+            StartCoroutine(CloseRoutine());
+            return;
+        }
+
+        StopAllCoroutines();
+        splineAnimate.NormalizedTime = 0f;
+        splineAnimate.Play();
+    }
 }

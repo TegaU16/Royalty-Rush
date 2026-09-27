@@ -1,3 +1,4 @@
+using Game.Audio;
 using TMPro;
 using UnityEngine;
 
@@ -5,6 +6,8 @@ public class GameTimer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private float durationInSeconds = 180f;
+
+    public AudioClip alarmSound;
 
     private float remainingTime;
     private bool isRunning;
@@ -66,6 +69,7 @@ public class GameTimer : MonoBehaviour
 
     private void TimerFinished()
     {
-        Debug.Log("Timer finished!");
+        AudioManager.Instance.PlaySFX(alarmSound);
+        GameManager.Instance.EndGame();
     }
 }

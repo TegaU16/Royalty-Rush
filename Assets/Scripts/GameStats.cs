@@ -56,4 +56,9 @@ public class GameStats : MonoBehaviour
     {
         CustomersKilled++;
     }
+
+    public void DisplayStats()
+    {
+
+    }
 }

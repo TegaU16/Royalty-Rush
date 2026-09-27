@@ -38,7 +38,6 @@ namespace Game.Audio
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
             musicCategoryDict = new Dictionary<string, List<AudioClip>>();
             foreach (MusicCategory category in musicCategories)
@@ -205,6 +204,7 @@ namespace Game.Audio
         private AudioSource GetPooledSource()
         {
             AudioSource src = sfxPool.Count > 0 ? sfxPool.Dequeue() : new GameObject("ExtraSFX").AddComponent<AudioSource>();
+
             src.gameObject.SetActive(true);
             return src;
         }

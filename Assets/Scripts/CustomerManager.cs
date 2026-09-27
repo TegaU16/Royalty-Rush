@@ -27,12 +27,6 @@ public class CustomerManager : MonoBehaviour
         Instance = this;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -54,13 +48,12 @@ public class CustomerManager : MonoBehaviour
         activeCustomer.OnCustomerLeave += RemoveCustomer;
     }
 
-    public void KillCustomer()
+    public void KillCustomer(bool addStats = true)
     {
-        Debug.Log("Try Killed");
         if (activeCustomer == null) return;
 
-        Debug.Log("Customer is null");
-        GameStats.Instance.CustomerKilled();
+        if (addStats)
+            GameStats.Instance.CustomerKilled();
 
         activeCustomer.Die();
         RemoveCustomer();

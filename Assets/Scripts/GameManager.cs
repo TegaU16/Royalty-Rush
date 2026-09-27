@@ -37,7 +37,11 @@ public class GameManager : MonoBehaviour
     public RectTransform charges;
     private CanvasGroup chargesCG;
 
+    private bool isGameOver;
+
     public event Action OnReady;
+
+    public KeyCode mainMenuKey = KeyCode.Return;
 
     public bool IsReady { get; private set; }
 
@@ -56,6 +60,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         IsReady = false;
+        isGameOver = false;
 
         countdownCG = countdownText.gameObject.GetComponent<CanvasGroup>();
         calculatorCG = calculatorSection.gameObject.GetComponent<CanvasGroup>();
@@ -66,6 +71,13 @@ public class GameManager : MonoBehaviour
         chargesCG = charges.gameObject.GetComponent<CanvasGroup>();
 
         CameraController.Instance.OnIntroComplete += StartCountdown;
+    }
+
+    private void Update()
+    {
+        if (!isGameOver) return;
+        if (Input.GetKeyDown(mainMenuKey))
+            SceneTransitioner.Instance.LoadScene("MainMenuScene");
     }
 
     private void StartCountdown()
@@ -125,5 +137,16 @@ public class GameManager : MonoBehaviour
         yield return _waitForSeconds2;
 
         UITween.FadeOut(chargesCG);
+    }
+
+    public void EndGame()
+    {
+        if (!IsReady) return;
+
+        IsReady = false;
+        CustomerManager.Instance.KillCustomer(addStats: false);
+        GameEndUI.Instance.EndGame();
+
+        isGameOver = true;
     }
 }
