@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Game.Audio;
 using Game.UI;
@@ -6,9 +7,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds2 = new WaitForSeconds(2f);
     private static readonly WaitForSeconds _waitForSeconds0_5 = new(0.5f);
     private static readonly WaitForSeconds _waitForSeconds1 = new(1f);
     public static GameManager Instance;
+
+    [SerializeField] private GameTimer gameTimer;
 
     [SerializeField] private int waitTime;
     [SerializeField] private TextMeshProUGUI countdownText;
@@ -18,9 +22,22 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private RectTransform calculatorSection;
     [SerializeField] private RectTransform cameraToggleSection;
+    [SerializeField] private RectTransform timerSection;
+    [SerializeField] private RectTransform swordSection;
 
     private CanvasGroup calculatorCG;
     private CanvasGroup cameraCG;
+    private CanvasGroup timerCG;
+    private CanvasGroup swordCG;
+
+    [Header("Warnings")]
+    public RectTransform bookModeSwing;
+    private CanvasGroup bookModeSwingCG;
+
+    public RectTransform charges;
+    private CanvasGroup chargesCG;
+
+    public event Action OnReady;
 
     public bool IsReady { get; private set; }
 
@@ -43,6 +60,10 @@ public class GameManager : MonoBehaviour
         countdownCG = countdownText.gameObject.GetComponent<CanvasGroup>();
         calculatorCG = calculatorSection.gameObject.GetComponent<CanvasGroup>();
         cameraCG = cameraToggleSection.gameObject.GetComponent<CanvasGroup>();
+        timerCG = timerSection.gameObject.GetComponent<CanvasGroup>();
+        swordCG = swordSection.gameObject.GetComponent<CanvasGroup>();
+        bookModeSwingCG = bookModeSwing.gameObject.GetComponent<CanvasGroup>();
+        chargesCG = charges.gameObject.GetComponent<CanvasGroup>();
 
         CameraController.Instance.OnIntroComplete += StartCountdown;
     }
@@ -65,7 +86,7 @@ public class GameManager : MonoBehaviour
             if (i == 0)
                 UITween.PopIn(calculatorSection, calculatorCG);
             else if (i == 1)
-                UITween.PopIn(calculatorSection, calculatorCG);
+                UITween.PopIn(swordSection, swordCG);
             else
                 UITween.PopIn(cameraToggleSection, cameraCG);
 
@@ -76,11 +97,33 @@ public class GameManager : MonoBehaviour
             yield return _waitForSeconds1;
         }
 
+        UITween.PopIn(timerSection, timerCG);
         UITween.PopIn(countdownText.rectTransform, countdownCG);
         countdownText.text = "GO!";
         yield return _waitForSeconds1;
 
         countdownText.gameObject.SetActive(false);
         IsReady = true;
+        gameTimer.StartTimer();
+
+        OnReady?.Invoke();
+    }
+
+    public IEnumerator BookModeSwing()
+    {
+        UITween.PopIn(bookModeSwing, bookModeSwingCG);
+
+        yield return _waitForSeconds2;
+
+        UITween.FadeOut(bookModeSwingCG);
+    }
+
+    public IEnumerator Charges()
+    {
+        UITween.PopIn(charges, chargesCG);
+
+        yield return _waitForSeconds2;
+
+        UITween.FadeOut(chargesCG);
     }
 }

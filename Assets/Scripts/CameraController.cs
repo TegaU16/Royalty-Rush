@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private GameObject camToggleDown;
 
     private bool isMoving;
-    private bool inBookCamera;
+    public bool InBookCamera { get; private set; }
 
     public event Action OnIntroComplete;
 
@@ -89,7 +89,7 @@ public class CameraController : MonoBehaviour
     public void ToggleBookCamera(bool on)
     {
         if (isMoving) return;
-        if ((inBookCamera && on == true) || (!inBookCamera && on == false)) return;
+        if ((InBookCamera && on == true) || (!InBookCamera && on == false)) return;
 
         StartCoroutine(BookCameraRoutine(on));
     }
@@ -130,7 +130,30 @@ public class CameraController : MonoBehaviour
         else
             mainCam.transform.SetPositionAndRotation(gamePos, gameRot);
 
-        inBookCamera = on;
+        InBookCamera = on;
         isMoving = false;
+    }
+
+    public IEnumerator Shake(float duration, float magnitude)
+    {
+        Vector3 originalPos = mainCam.transform.localPosition;
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+            float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+
+            mainCam.transform.localPosition = new Vector3(
+                originalPos.x + x,
+                originalPos.y + y,
+                originalPos.z
+            );
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        mainCam.transform.localPosition = originalPos;
     }
 }

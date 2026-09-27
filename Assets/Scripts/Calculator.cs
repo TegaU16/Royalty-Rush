@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Audio;
 using TMPro;
 using UnityEngine;
 
@@ -12,8 +13,12 @@ public class Calculator : MonoBehaviour
 
     private bool justCalculated;
 
+    [SerializeField] private AudioClip clickSound;
+
     public void NumberPressed(string number)
     {
+        PlayClickSound();
+
         if (justCalculated)
         {
             ClearCalculator();
@@ -26,6 +31,8 @@ public class Calculator : MonoBehaviour
 
     public void DecimalPressed()
     {
+        PlayClickSound();
+
         if (justCalculated)
         {
             ClearCalculator();
@@ -44,6 +51,8 @@ public class Calculator : MonoBehaviour
 
     public void OperationPressed(string op)
     {
+        PlayClickSound();
+
         if (string.IsNullOrEmpty(currentInput)) return;
 
         if (justCalculated)
@@ -59,6 +68,8 @@ public class Calculator : MonoBehaviour
 
     public void EqualsPressed()
     {
+        PlayClickSound();
+
         if (string.IsNullOrEmpty(currentInput)) return;
 
         numbers.Add(float.Parse(currentInput));
@@ -138,4 +149,6 @@ public class Calculator : MonoBehaviour
 
         display.text = "";
     }
+
+    private void PlayClickSound() => AudioManager.Instance.PlaySFX(clickSound);
 }

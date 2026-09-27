@@ -80,14 +80,20 @@ public class Book : MonoBehaviour
         }
     }
 
-    public void FinishPayment(bool paymentCorrect)
+    public void FinishPayment(bool paymentCorrect, Payment payment)
     {
         CameraController.Instance.ToggleBookCamera(on: false);
         StartCoroutine(CloseRoutine());
-        customer.Leave(!paymentCorrect);
+
+        if (paymentCorrect)
+            customer.Leave(false, payment);
+        else
+            customer.Leave(true, payment);
     }
 
     private void RemoveBook() => Destroy(gameObject);
 
     public void SetCustomer(Customer customer) => this.customer = customer;
+
+    public void Close() => StartCoroutine(CloseRoutine());
 }

@@ -43,7 +43,7 @@ public class PaymentUI : MonoBehaviour
 
         if (!float.TryParse(paymentInput.text, out float enteredAmount))
         {
-            book.FinishPayment(false);
+            book.FinishPayment(false, currentPayment);
             currentPayment = null;
             return;
         }
@@ -51,7 +51,7 @@ public class PaymentUI : MonoBehaviour
         float correctAmount = currentPayment.CorrectPayment;
         bool paymentCorrect = Mathf.Abs(enteredAmount - correctAmount) < 0.01f;
 
-        book.FinishPayment(paymentCorrect);
+        book.FinishPayment(paymentCorrect, currentPayment);
 
         currentPayment = null;
     }

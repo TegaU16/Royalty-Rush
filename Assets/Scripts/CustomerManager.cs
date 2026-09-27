@@ -54,5 +54,17 @@ public class CustomerManager : MonoBehaviour
         activeCustomer.OnCustomerLeave += RemoveCustomer;
     }
 
+    public void KillCustomer()
+    {
+        Debug.Log("Try Killed");
+        if (activeCustomer == null) return;
+
+        Debug.Log("Customer is null");
+        GameStats.Instance.CustomerKilled();
+
+        activeCustomer.Die();
+        RemoveCustomer();
+    }
+
     private void RemoveCustomer() => activeCustomer = null;
 }

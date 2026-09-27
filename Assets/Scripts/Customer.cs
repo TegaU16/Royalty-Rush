@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using Game.Audio;
+using Game.UI;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -12,6 +15,17 @@ public class Customer : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [SerializeField] private GameObject book;
+    [SerializeField] private AudioClip[] footstepSounds;
+    [SerializeField] private AudioClip slamSound;
+
+    [SerializeField] private PatienceBar patienceBar;
+    private CanvasGroup patienceBarCG;
+    private RectTransform patienceRect;
+
+    public int patience = 20;
+    private float currentPatience;
+
+    public ParticleSystem deathPS;
 
     private bool isMoving;
     private bool isLeaving;
@@ -23,6 +37,12 @@ public class Customer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currentPatience = patience;
+
+        patienceBar.SetPatience(currentPatience, patience);
+        patienceBarCG = patienceBar.gameObject.GetComponent<CanvasGroup>();
+        patienceRect = patienceBar.gameObject.GetComponent<RectTransform>();
+
         splineAnimate.Completed += PlaceBook;
     }
 
@@ -47,11 +67,48 @@ public class Customer : MonoBehaviour
 
         spawnedBook = bookObject.GetComponent<Book>();
         spawnedBook.SetCustomer(this);
+
+        AudioManager.Instance.PlaySFX(slamSound);
+        StartCoroutine(Patience());
+        StartCoroutine(CameraController.Instance.Shake(duration: 0.5f, magnitude: 0.04f));
     }
 
-    public void Leave(bool angry)
+    private IEnumerator Patience()
     {
+        UITween.PopIn(patienceRect, patienceBarCG);
+
+        while (currentPatience > 0f && !isLeaving)
+        {
+            currentPatience -= Time.deltaTime;
+
+            patienceBar.SetPatience(currentPatience, patience);
+
+            yield return null;
+        }
+
+        if (!isLeaving && currentPatience <= 0f)
+        {
+            currentPatience = 0f;
+
+            patienceBar.SetPatience(currentPatience, patience);
+            if (spawnedBook != null)
+                spawnedBook.Close();
+            Leave(angry: true, null);
+        }
+    }
+
+    public void Leave(bool angry, Payment payment)
+    {
+        if (isLeaving) return;
         isLeaving = true;
+
+        UITween.FadeOut(patienceBarCG);
+
+        if (angry)
+            GameStats.Instance.CustomerAngry();
+        else
+            GameStats.Instance.CustomerSatisfied(payment);
+
         splineAnimate.Container = CustomerManager.Instance.customerLeavePath;
         splineAnimate.NormalizedTime = 0f;
         splineAnimate.Play();
@@ -59,6 +116,7 @@ public class Customer : MonoBehaviour
         isMoving = true;
         animator.SetBool(IsMovingHash, isMoving);
 
+        StopAllCoroutines();
         OnCustomerLeave?.Invoke();
         Destroy(gameObject, 8f);
     }
@@ -70,5 +128,27 @@ public class Customer : MonoBehaviour
 
         isMoving = true;
         animator.SetBool(IsMovingHash, isMoving);
+    }
+
+    public void PlayFootstepSound()
+    {
+        int index = UnityEngine.Random.Range(0, footstepSounds.Length);
+        AudioClip clip = footstepSounds[index];
+
+        AudioManager.Instance.PlaySFX(clip);
+    }
+
+    public void Die()
+    {
+        StopAllCoroutines();
+
+        if (spawnedBook != null)
+            spawnedBook.Close();
+
+        deathPS.transform.SetParent(null);
+        deathPS.Play();
+
+        Destroy(deathPS.gameObject, 2f);
+        Destroy(gameObject, 0.5f);
     }
 }
